@@ -82,6 +82,9 @@ export interface SelectorProps {
    * This may be removed after React provides replacement of `findDOMNode`
    */
   domRef: React.Ref<HTMLDivElement>;
+
+  /** 'getInputRef' returns the input element ref */
+  getInputRef?: (x: HTMLInputElement) => void;
 }
 
 const Selector: React.RefForwardingComponent<RefSelectorProps, SelectorProps> = (props, ref) => {
@@ -99,10 +102,14 @@ const Selector: React.RefForwardingComponent<RefSelectorProps, SelectorProps> = 
     onInputKeyDown,
 
     domRef,
+    getInputRef,
   } = props;
 
   // ======================= Ref =======================
   React.useImperativeHandle(ref, () => ({
+    select: () => {
+      inputRef.current.select();
+    },
     focus: () => {
       inputRef.current.focus();
     },
@@ -110,6 +117,12 @@ const Selector: React.RefForwardingComponent<RefSelectorProps, SelectorProps> = 
       inputRef.current.blur();
     },
   }));
+
+  React.useEffect(() => {
+    if (getInputRef && inputRef.current) {
+      getInputRef(inputRef);
+    }
+  }, [inputRef]);
 
   // ====================== Input ======================
   const [getInputMouseDown, setInputMouseDown] = useLock(0);

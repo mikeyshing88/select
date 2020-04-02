@@ -1578,4 +1578,10 @@ describe('Select.Basic', () => {
     toggleOpen(wrapper);
     expect(wrapper.find('.rc-select-selection-placeholder').length).toBeFalsy();
   });
+
+  it('should support getInputRef ', () => {
+    const getInputRef = jest.fn();
+    mount(<Select getInputRef={getInputRef} />);
+    expect(getInputRef).toHaveBeenCalled();
+  });
 });
